@@ -1,4 +1,4 @@
-//const fetch = require('node-fetch');
+const fetch = require('node-fetch');
 const { reject } = require('cypress/types/bluebird');
 const fs = require('fs');
 
@@ -62,3 +62,36 @@ promise
 fs.promises.readFile('./test.txt', {encoding: 'utf-8'})
     .then(data => console.log(data))
     .catch(err => console.error(err))
+
+
+//***********************************AWAIT ASYNC************************************ */
+
+// Når vi har en asynkron funktion kan vi bruge await keyword, vi slipper her for at lave .then til at håndtere resultatet.
+const loadfile = async () => {
+    try {
+        const data = await fs.promises.loadfile('./test.txt', {encoding: 'utf-8'})    
+        console.log(data);
+    } catch (error) {
+        console.error(error);
+    }
+    
+}
+
+loadfile();
+
+const fetchPoke = async (id) => {
+    // Altid have trycatch omkring for at håndtere i tilfælde af at vores promise ikke bliver resolved og fejler så vi kan få fejlbeskeden ud.
+    try {
+        // Når vi fetcher fra en api, får vi det ud i Json format.
+        const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+
+        // .json er også et promise derfor vi også skal bruge keywordet await.
+        const data = await res.json();
+        // Som vi så til sidst kan skrive ud til konsollen
+        console.log(data);
+
+    } catch (error) {
+        console.error(error);
+    }
+    
+}
